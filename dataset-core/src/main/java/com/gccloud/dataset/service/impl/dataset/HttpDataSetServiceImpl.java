@@ -17,6 +17,7 @@
 package com.gccloud.dataset.service.impl.dataset;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.gccloud.common.config.DatasetConfig;
 import com.gccloud.common.exception.GlobalException;
 import com.gccloud.common.utils.BeanConvertUtils;
 import com.gccloud.common.utils.GroovyUtils;
@@ -64,6 +65,9 @@ public class HttpDataSetServiceImpl extends ServiceImpl<DatasetDao, DatasetEntit
 
     @Resource
     private DatasetPermissionClient datasetPermissionClient;
+
+    @Resource
+    private DatasetConfig datasetConfig;
 
     /**
      * 前端执行
@@ -302,6 +306,9 @@ public class HttpDataSetServiceImpl extends ServiceImpl<DatasetDao, DatasetEntit
         reqParams.put("params", params);
         reqParams.put("data", body);
         if (StringUtils.isNotBlank(config.getRequestScript())) {
+            if (!datasetConfig.isEnableGroovy()) {
+                throw new GlobalException("当前未启用后端脚本执行功能，请联系管理员");
+            }
             Map<String, Object> requestScriptMap = Maps.newHashMap();
             requestScriptMap.put("req", reqParams);
             GroovyUtils.run(config.getRequestScript(), requestScriptMap);
@@ -421,6 +428,9 @@ public class HttpDataSetServiceImpl extends ServiceImpl<DatasetDao, DatasetEntit
         // 如果有响应后脚本，则执行响应后脚本
         boolean runResponseScript = StringUtils.isNotBlank(config.getResponseScript());
         if (runResponseScript) {
+            if (!datasetConfig.isEnableGroovy()) {
+                throw new GlobalException("当前未启用后端脚本执行功能，请联系管理员");
+            }
             Map<String, Object> responseScriptMap = Maps.newHashMap();
             // 取name和value
             responseScriptMap.put("responseString", responseBody);

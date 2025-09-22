@@ -17,6 +17,7 @@
 package com.gccloud.dataset.service.impl.dataset;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.gccloud.common.config.DatasetConfig;
 import com.gccloud.common.exception.GlobalException;
 import com.gccloud.common.utils.GroovyUtils;
 import com.gccloud.common.utils.JSON;
@@ -57,6 +58,8 @@ public class GroovyDataSetServiceImpl extends ServiceImpl<DatasetDao, DatasetEnt
     @Resource
     private DatasetPermissionClient datasetPermissionClient;
 
+    @Resource
+    private DatasetConfig datasetConfig;
 
     @Override
     public String add(DatasetEntity entity) {
@@ -79,6 +82,9 @@ public class GroovyDataSetServiceImpl extends ServiceImpl<DatasetDao, DatasetEnt
 
     @Override
     public Object execute(String id, List<DatasetParamDTO> params) {
+        if (!datasetConfig.isEnableGroovy()) {
+            throw new GlobalException("当前未启用脚本数据集功能，请联系管理员");
+        }
         if (StringUtils.isBlank(id)) {
             throw new GlobalException("数据集id不能为空");
         }
@@ -107,6 +113,9 @@ public class GroovyDataSetServiceImpl extends ServiceImpl<DatasetDao, DatasetEnt
      * @return
      */
     private Object getData(List<DatasetParamDTO> finalParams, DatasetEntity datasetEntity) {
+        if (!datasetConfig.isEnableGroovy()) {
+            throw new GlobalException("当前未启用脚本数据集功能，请联系管理员");
+        }
         long startTime = System.currentTimeMillis();
         GroovyDataSetConfig config = (GroovyDataSetConfig) datasetEntity.getConfig();
         String script = config.getScript();
@@ -123,6 +132,9 @@ public class GroovyDataSetServiceImpl extends ServiceImpl<DatasetDao, DatasetEnt
 
     @Override
     public DataVO execute(TestExecuteDTO executeDTO) {
+        if (!datasetConfig.isEnableGroovy()) {
+            throw new GlobalException("当前未启用脚本数据集功能，请联系管理员");
+        }
         String script = executeDTO.getScript();
         if (StringUtils.isBlank(script)) {
             throw new GlobalException("脚本不能为空");
