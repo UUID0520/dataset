@@ -5,6 +5,7 @@
 <p align="center">
     <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/gcpaas/dataset?style=social">
     <img alt="GitHub forks" src="https://img.shields.io/github/forks/gcpaas/dataset?style=social">
+    <img alt="AtomGitStars" src="https://atomgit.com/gcpaas/dataset/star/badge.svg"> 
     <img alt="GitHub license" src="https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg">
     <img alt="Maven Central" src="https://img.shields.io/maven-central/v/com.gccloud/dataset-core">
     <img alt="Company" src="https://img.shields.io/badge/Author-科大国创云网科技有限公司-blue.svg">
